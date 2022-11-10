@@ -41,8 +41,13 @@ resource "aws_iam_role" "lambda_role" {
   name               = "${local.function_name}-role"
 }
 
-resource "aws_iam_role_policy_attachment" "basic" {
+resource "aws_iam_role_policy_attachment" "basic_execution" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+  role       = aws_iam_role.lambda_role.name
+}
+
+resource "aws_iam_role_policy_attachment" "kinesis_execution" {
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaKinesisExecutionRole"
   role       = aws_iam_role.lambda_role.name
 }
 
