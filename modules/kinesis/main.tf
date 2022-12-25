@@ -1,20 +1,19 @@
-locals {
-  stream_name = "log-router-test"
-  bucket_name = "log-router-test-bucket"
-}
-
 resource "aws_kinesis_firehose_delivery_stream" "forehose_delivery_stream" {
-  name        = local.stream_name
+  name        = var.stream_name
   destination = "extended_s3"
 
   extended_s3_configuration {
     role_arn   = aws_iam_role.firehose_role.arn
     bucket_arn = aws_s3_bucket.bucket.arn
+
+    buffer_interval = 60
+    buffer_size     = 1
+    prefix          = "logs/"
   }
 }
 
 resource "aws_s3_bucket" "bucket" {
-  bucket = local.bucket_name
+  bucket = var.bucket_name
 }
 
 resource "aws_s3_bucket_acl" "bucket_acl" {
@@ -40,4 +39,36 @@ resource "aws_iam_role" "firehose_role" {
   ]
 }
 EOF
+}
+
+resource "aws_iam_policy" "firehose_s3" {
+  name_prefix = "firehose_test_policy"
+  policy      = <<-EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+        "Sid": "",
+        "Effect": "Allow",
+        "Action": [
+            "s3:AbortMultipartUpload",
+            "s3:GetBucketLocation",
+            "s3:GetObject",
+            "s3:ListBucket",
+            "s3:ListBucketMultipartUploads",
+            "s3:PutObject"
+        ],
+        "Resource": [
+            "${aws_s3_bucket.bucket.arn}",
+            "${aws_s3_bucket.bucket.arn}/*"
+        ]
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy_attachment" "firehose_s3" {
+  role       = aws_iam_role.firehose_role.name
+  policy_arn = aws_iam_policy.firehose_s3.arn
 }

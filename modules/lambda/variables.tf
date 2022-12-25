@@ -8,5 +8,7 @@ variable "extension_arn" {
 }
 
 variable "firehose_arn" {
-    
+}
+
+variable "stream_name" {
 }

@@ -15,9 +15,11 @@ edition = "2021"
 # and it will keep the alphabetic ordering for you.
 
 [dependencies]
-lambda-extension = "0.7"
+lambda-extension = "0.8.0"
 serde = "1.0.136"
-tokio = { version = "1", features = ["macros"] }
+tokio = { version = "1.20.1", features = ["macros"] }
 tracing = { version = "0.1", features = ["log"] }
 tracing-subscriber = { version = "0.3", default-features = false, features = ["fmt"] }
-
+aws-config = "0.52.0"
+aws-sdk-firehose = "0.22.0"
+lazy_static = "1.4.0"

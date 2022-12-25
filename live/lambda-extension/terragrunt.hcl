@@ -7,6 +7,6 @@ terraform {
 }
 
 inputs = {
-  extension_base_path = "${find_in_parent_folders("root.hcl")}/../"
+  extension_base_path = "${dirname(find_in_parent_folders("root.hcl"))}"
 }
 

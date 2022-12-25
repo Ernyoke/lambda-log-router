@@ -1,5 +1,5 @@
 locals {
-  extension_name = "log-rouer-kinesis"
+  extension_name = "log-router-kinesis"
 }
 
 data "archive_file" "package" {
@@ -12,6 +12,7 @@ data "archive_file" "package" {
 resource "aws_lambda_layer_version" "lambda_extension" {
   filename   = "temp/${local.extension_name}.zip"
   layer_name = local.extension_name
+  source_code_hash = data.archive_file.package.output_base64sha256
 
-  compatible_runtimes = ["nodejs14.x", "provided.al2"]
+  compatible_runtimes = ["nodejs16.x", "nodejs18.x", "provided.al2"]
 }

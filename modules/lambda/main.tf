@@ -14,6 +14,12 @@ resource "aws_lambda_function" "lambda" {
   timeout          = 60
   architectures    = ["x86_64"]
 
+  environment {
+    variables = {
+      KINESIS_DELIVERY_STREAM = var.stream_name
+    }
+  }
+
   layers = [
     var.extension_arn
   ]
@@ -47,7 +53,7 @@ resource "aws_iam_role_policy_attachment" "basic_execution" {
 }
 
 resource "aws_iam_role_policy_attachment" "kinesis_execution" {
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaKinesisExecutionRole"
+  policy_arn = "arn:aws:iam::aws:policy/AmazonKinesisFirehoseFullAccess"
   role       = aws_iam_role.lambda_role.name
 }
 
