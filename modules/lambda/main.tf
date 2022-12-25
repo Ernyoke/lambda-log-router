@@ -8,7 +8,7 @@ resource "aws_lambda_function" "lambda" {
   memory_size      = 128
   package_type     = "Zip"
   role             = aws_iam_role.lambda_role.arn
-  runtime          = "nodejs16.x"
+  runtime          = "nodejs18.x"
   filename         = "${path.module}/temp/${local.function_name}.zip"
   source_code_hash = data.archive_file.lambda_zip.output_base64sha256
   timeout          = 60
@@ -57,3 +57,7 @@ resource "aws_iam_role_policy_attachment" "kinesis_execution" {
   role       = aws_iam_role.lambda_role.name
 }
 
+resource "aws_lambda_function_url" "lambda_url" {
+  function_name      = aws_lambda_function.lambda.function_name
+  authorization_type = "NONE"
+}
