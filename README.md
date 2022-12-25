@@ -7,13 +7,14 @@
 - Rust: [https://www.rust-lang.org/tools/install](https://www.rust-lang.org/tools/install)
 - cargo-lambda: [https://www.cargo-lambda.info/guide/installation.html](https://www.cargo-lambda.info/guide/installation.html)
 - terragrunt
-- terraform (>1.0.0)
+- terraform (>1.3.0)
 
 ### Steps to build
 
 1. Build the Lambda extension:
 
 ```bash
+cd src/lambda-extension
 cargo lambda build --extension
 ```
 
