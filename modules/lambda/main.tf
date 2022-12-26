@@ -1,9 +1,5 @@
-locals {
-  function_name = "log-router-test"
-}
-
 resource "aws_lambda_function" "lambda" {
-  function_name    = local.function_name
+  function_name    = var.function_name
   handler          = "index.handler"
   memory_size      = 128
   package_type     = "Zip"

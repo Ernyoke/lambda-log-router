@@ -9,6 +9,8 @@ use lazy_static::lazy_static;
 use std::env;
 
 static ENV_STREAM_NAME: &str = "KINESIS_DELIVERY_STREAM";
+
+// Read the stream name from an environment variable
 lazy_static! {
     static ref STREAM: String = env::var(ENV_STREAM_NAME).unwrap_or_else(|e| panic!(
         "Could not read environment variable {}! Reason: {}",
@@ -19,6 +21,7 @@ lazy_static! {
 #[tokio::main]
 async fn main() -> Result<(), Error> {
     println!("Loading extension...");
+    // Register the handler to our extension
     let logs_processor = SharedService::new(service_fn(handler));
 
     Extension::new()
@@ -30,7 +33,10 @@ async fn main() -> Result<(), Error> {
 }
 
 async fn handler(logs: Vec<LambdaLog>) -> Result<(), Error> {
+    // Build the Kinesis Firehose client
     let firehose_client = build_firehose_client().await;
+    // Listen to all the events emitted when a Lambda Function is logging something. Send these
+    // events to a Firehose delivery stream
     for log in logs {
         match log.record {
             LambdaLogRecord::Function(record) | LambdaLogRecord::Extension(record) => {
@@ -42,6 +48,7 @@ async fn handler(logs: Vec<LambdaLog>) -> Result<(), Error> {
     Ok(())
 }
 
+// Build the Firehose client
 async fn build_firehose_client() -> Client {
     let region_provider = RegionProviderChain::default_provider();
     let shared_config = aws_config::from_env().region(region_provider).load().await;
@@ -49,6 +56,7 @@ async fn build_firehose_client() -> Client {
     client
 }
 
+// Send a message to the Firehose stream
 async fn put_record(
     client: &Client,
     stream: &str,
