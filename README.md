@@ -1,5 +1,7 @@
 # lambda-log-router
 
+This is the code repository for the blog post: [https://ervinszilagyi.dev/articles/aws-lambda-extensions-with-rust.html](https://ervinszilagyi.dev/articles/aws-lambda-extensions-with-rust.html)
+
 ## Building
 
 ### Requirements
